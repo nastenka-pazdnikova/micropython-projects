@@ -92,7 +92,6 @@ while True:
 
     down_count(tm, 3.5)
 
-
     yellow.low()
     yellow2.low()
     red2.low()
