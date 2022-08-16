@@ -5,6 +5,14 @@ from pyb import Switch
 
 import tm1638
 
+
+import max7219
+from machine import Pin, SPI
+spi = SPI(2)
+display = max7219.Matrix8x8(spi, Pin('B12'), 4)
+
+
+
 tm = tm1638.TM1638(stb=Pin('P8'), clk=Pin('P9'), dio=Pin('P10'))
 green = Pin("P5", Pin.OUT_PP, 0)
 yellow = Pin("P4", Pin.OUT_PP, 0)
@@ -41,6 +49,13 @@ def down_count(display, deley):
     display.clear()
 
 
+def display_show(display, str):
+
+    display.fill(0)
+    display.text(str, 0, 0, 1)
+    display.show()
+
+
 def down_blink_and_count(display, deley, led):
 
     while deley > 0:
@@ -57,6 +72,8 @@ def down_blink_and_count(display, deley, led):
 
 while True:
 
+    display_show(display, "STOP")
+
 
     red.high()
     green2.high()
@@ -68,6 +85,8 @@ while True:
     down_blink_and_count(tm, 5, green2)
 
 
+    display_show(display, "WAIT")
+
     yellow.high()
     yellow2.high()
     green2.low()
@@ -77,15 +96,25 @@ while True:
     red.low()
     yellow.low()
     yellow2.low()
+
+    display_show(display, "GO")
+
     green.high()
     red2.high()
     down_count(tm, 3)
+
+
+    display.fill(0)
+    display.text('RUN', 0, 0, 1)
+    display.show()
     down_blink_and_count(tm, 3, green)
 
     green.low()
     sleep(0.5)
     tm.show("1")
 
+
+    display_show(display, "FAST")
 
     yellow.high()
     yellow2.high()
