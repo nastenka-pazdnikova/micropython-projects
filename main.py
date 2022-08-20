@@ -1,4 +1,3 @@
-from machine import Pin
 from time import sleep
 
 from pyb import Switch
@@ -8,6 +7,8 @@ import tm1638
 
 import max7219
 from machine import Pin, SPI
+from pyb import Timer
+
 spi = SPI(2)
 display = max7219.Matrix8x8(spi, Pin('B12'), 4)
 
@@ -24,6 +25,10 @@ yellow2 = Pin("P1", Pin.OUT_PP, 0)
 red2 = Pin("P0", Pin.OUT_PP, 0)
 
 
+p = Pin('P6')
+tim = Timer(3, freq=100)
+ch = tim.channel(1, Timer.PWM, pin=p)
+ch.pulse_width_percent(50)
 
 green.low()
 yellow.low()
