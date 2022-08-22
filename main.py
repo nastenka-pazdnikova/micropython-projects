@@ -25,10 +25,19 @@ yellow2 = Pin("P1", Pin.OUT_PP, 0)
 red2 = Pin("P0", Pin.OUT_PP, 0)
 
 
-p = Pin('P6')
-tim = Timer(3, freq=100)
-ch = tim.channel(1, Timer.PWM, pin=p)
-ch.pulse_width_percent(50)
+def beep_on():
+
+    tim = Timer(1, freq=500)
+    ch = tim.channel(1, Timer.PWM, pin=Pin("P12"))
+    ch.pulse_width_percent(50)
+
+
+def beep_off():
+
+    tim = Timer(1, freq=500)
+    tim.deinit()
+
+
 
 green.low()
 yellow.low()
@@ -69,7 +78,10 @@ def down_blink_and_count(display, deley, led):
         else:
             led.high()
         display.show(f"{deley}")
-        sleep(0.5)
+        beep_on()
+        sleep(0.25)
+        beep_off()
+        sleep(0.25)
         deley = deley - 0.5
 
     display.clear()
