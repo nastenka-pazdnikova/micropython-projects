@@ -7,6 +7,7 @@ import max7219
 import tm1638
 from buzzer import Buzzer
 from delay_service import DelayService
+from traffic_light import TrafficLight
 
 
 def display_show(display, str):
@@ -19,21 +20,12 @@ spi = SPI(2)
 display = max7219.Matrix8x8(spi, Pin('B12'), 4)
 
 tm = tm1638.TM1638(stb=Pin('P8'), clk=Pin('P9'), dio=Pin('P10'))
-green = Pin("P5", Pin.OUT_PP, 0)
-yellow = Pin("P4", Pin.OUT_PP, 0)
-red = Pin("P3", Pin.OUT_PP, 0)
 
-green2 = Pin("P2", Pin.OUT_PP, 0)
-yellow2 = Pin("P1", Pin.OUT_PP, 0)
-red2 = Pin("P0", Pin.OUT_PP, 0)
 
-green.low()
-yellow.low()
-red.low()
 
-green2.low()
-yellow2.low()
-red2.low()
+traffic_light1 = TrafficLight("P3", "P4", "P5")
+traffic_light2 = TrafficLight("P0", "P1", "P2")
+
 
 sw = Switch()
 tm.clear()
@@ -46,50 +38,46 @@ while True:
 
     display_show(display, "STOP")
 
-    red.high()
-    green2.high()
+    traffic_light1.stop()
+    traffic_light2.go()
 
     while not sw.value():
         sleep(0.1)
 
-    delay_service.down_blink_and_count(5, green2)
+    delay_service.down_blink_and_count(5, traffic_light2.green)
 
-    display_show(display, "WAIT")
+    display_show(display, "READY")
 
-    yellow.high()
-    yellow2.high()
-    green2.low()
+    traffic_light1.ready()
+    traffic_light2.fast()
+
 
     delay_service.down_count(3)
 
-    red.low()
-    yellow.low()
-    yellow2.low()
+    traffic_light1.go()
+    traffic_light2.stop()
 
     display_show(display, "GO")
 
-    green.high()
-    red2.high()
+    traffic_light1.fast()
+    traffic_light2.ready()
     delay_service.down_count(3)
 
     display.fill(0)
-    display.text('RUN', 0, 0, 1)
     display.show()
-    delay_service.down_blink_and_count(3, green)
+    delay_service.down_blink_and_count(3, traffic_light1.green)
 
-    green.low()
+    traffic_light1.fast()
     sleep(0.5)
     tm.show("1")
 
     display_show(display, "FAST")
 
-    yellow.high()
-    yellow2.high()
+    traffic_light1.stop()
+    traffic_light2.go()
 
     delay_service.down_count(3.5)
 
-    yellow.low()
-    yellow2.low()
-    red2.low()
-    red.high()
-    green2.high()
+    traffic_light1.stop()
+    traffic_light2.go()
+
