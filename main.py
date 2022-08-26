@@ -21,16 +21,16 @@ display = max7219.Matrix8x8(spi, Pin('B12'), 4)
 
 tm = tm1638.TM1638(stb=Pin('P8'), clk=Pin('P9'), dio=Pin('P10'))
 
+buzzer = Buzzer(Pin("P12"), 500)
 
 
-traffic_light1 = TrafficLight("P3", "P4", "P5")
-traffic_light2 = TrafficLight("P0", "P1", "P2")
+traffic_light1 = TrafficLight("P3", "P4", "P5", buzzer)
+traffic_light2 = TrafficLight("P0", "P1", "P2", buzzer)
 
 
 sw = Switch()
 tm.clear()
 
-buzzer = Buzzer(Pin("P12"), 500)
 
 delay_service = DelayService(tm, buzzer)
 
@@ -46,7 +46,7 @@ while True:
 
     traffic_light1.stop()
     traffic_light2.run()
-    delay_service.down_blink_and_count(5, traffic_light2.green)
+    delay_service.down_count(4.5)
 
     display_show(display, "READY")
 
@@ -65,7 +65,7 @@ while True:
     traffic_light1.run()
     traffic_light2.stop()
 
-    delay_service.down_blink_and_count(3, traffic_light1.green)
+    delay_service.down_count(3)
 
 
     display_show(display, "FAST")
