@@ -44,6 +44,8 @@ while True:
     while not sw.value():
         sleep(0.1)
 
+    traffic_light1.stop()
+    traffic_light2.run()
     delay_service.down_blink_and_count(5, traffic_light2.green)
 
     display_show(display, "READY")
@@ -54,30 +56,23 @@ while True:
 
     delay_service.down_count(3)
 
+    display_show(display, "GO")
     traffic_light1.go()
     traffic_light2.stop()
-
-    display_show(display, "GO")
-
-    traffic_light1.fast()
-    traffic_light2.ready()
     delay_service.down_count(3)
 
-    display.fill(0)
-    display.show()
+    display_show(display, "RUN")
+    traffic_light1.run()
+    traffic_light2.stop()
+
     delay_service.down_blink_and_count(3, traffic_light1.green)
 
-    traffic_light1.fast()
-    sleep(0.5)
-    tm.show("1")
 
     display_show(display, "FAST")
 
-    traffic_light1.stop()
-    traffic_light2.go()
+    traffic_light1.fast()
+    traffic_light2.ready()
 
     delay_service.down_count(3.5)
 
-    traffic_light1.stop()
-    traffic_light2.go()
 
